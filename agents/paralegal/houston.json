@@ -70,6 +70,28 @@
     },
     {
       "category": "Intake",
+      "title": "Traffic-light this NDA — can I sign it?",
+      "blurb": "Green / yellow / red with paste-ready redlines on Red.",
+      "prompt": "Traffic-light this NDA from {counterparty}: {paste or file}.",
+      "fullPrompt": "Run the nda-traffic-light skill on this inbound NDA from {counterparty}. Paste the text, give me a file, or point me at it in your document storage (I'll fetch via any Composio-connected document-storage). Read ../general-counsel/legal-context.md first for entity + risk posture, then config/nda-rubric.json for any overrides I've learned. Walk the seven-dimension rubric — mutuality, term length, definition of confidential info, carve-outs, jurisdiction, non-solicit smuggling, return/destruction — and call each GREEN / YELLOW / RED with a one-sentence reason and the quoted language. Compute the overall color (RED dominates; any single blocked clause — non-compete, uncapped liability, IP assignment, perpetual term, audit rights, publicity — forces RED). For every RED item, draft a specific paste-able redline. Save to ndas/{counterparty-slug}-{YYYY-MM-DD}.md. Flag attorneyReviewRequired: true on any RED. This is a summary, not legal advice — escalate commercial-impact items via General Counsel's escalate-to-outside-counsel.",
+      "description": "Seven-dimension rubric on an inbound NDA — mutuality, term, confidential-info definition, carve-outs, jurisdiction, non-solicit smuggling, return/destruction — with specific paste-ready redlines on every Red item. Summary, not legal advice.",
+      "outcome": "Review at ndas/{counterparty-slug}-{YYYY-MM-DD}.md with per-dimension color calls + redlines.",
+      "skill": "nda-traffic-light",
+      "tool": "Document Storage"
+    },
+    {
+      "category": "Intake",
+      "title": "Triage this enterprise security questionnaire",
+      "blurb": "Pre-fills from your answers library; one sit-down closes the rest.",
+      "prompt": "Triage this security questionnaire from {counterparty}: {paste or file}.",
+      "fullPrompt": "Run the security-questionnaire-intake skill on this inbound questionnaire from {counterparty}. Paste the text, upload a file (SIG-lite / CAIQ / custom Google sheet), or point me at it in your document storage (I'll fetch via any Composio-connected document-storage or spreadsheet category). Read ../general-counsel/legal-context.md first, then config/security-answers.md — the founder's growing library of security-program answers. Extract the question set, pre-fill every question answerable from the library (tag source: library-exact / library-near), group the unanswered ones by topic (access control, encryption, subprocessors, incident response, etc.) so one sit-down closes many. Draft the response doc to security-questionnaires/{counterparty-slug}-{YYYY-MM-DD}.md with a short 'still need from you' list at top. As I answer, append new Q/A pairs to config/security-answers.md so the library grows. Flag attorneyReviewRequired: true on any question implying a contractual commitment (SLAs, breach-notification clocks, audit rights, insurance minimums). This is a summary, not legal advice.",
+      "description": "Enterprise security questionnaire triage: extracts questions, pre-fills from the growing config/security-answers.md library, groups unanswered by topic so one founder sit-down closes many, and appends new answers back to grow the library.",
+      "outcome": "Draft at security-questionnaires/{counterparty-slug}-{YYYY-MM-DD}.md + an updated config/security-answers.md.",
+      "skill": "security-questionnaire-intake",
+      "tool": "Document Storage"
+    },
+    {
+      "category": "Intake",
       "title": "Extract the clauses from this contract",
       "blurb": "Term, cap, indemnity, IP, DPA — structured.",
       "prompt": "Extract the clauses from this contract: {file or URL}.",

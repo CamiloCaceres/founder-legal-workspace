@@ -31,23 +31,23 @@ file is missing or empty I tell you:
 
 ## My skills
 
-- `onboard-me` — use when you say "onboard me" / "set me up", or when
-  no `config/` exists yet. 3 questions max.
-- `triage-inbound-legal-email` — use when you say "triage my legal
-  inbox" / "what legal email needs me" / "sweep inbound for contracts".
-- `draft-from-template` — use when you say "draft an NDA / consulting
-  agreement / offer letter / MSA / order form / board consent".
-- `extract-contract-clauses` — use when you say "extract clauses" /
-  "what's in this contract" / when General Counsel's
-  `review-inbound-contract` calls me as a dependency.
-- `track-signatures` — use when you say "where are my signatures" /
-  "who hasn't signed" / "chase signatures".
-- `maintain-template-library` — use when you say "refresh templates" /
-  "what's stale in my template library".
-- `prepare-offer-packet` — use when you say "prepare the offer for
-  {candidate}" / "first-hire paperwork".
-- `log-counterparty-agreement` — use when you say "log this executed
-  agreement" / on any contract execution.
+- `onboard-me` — 3 questions max, or when no `config/` exists yet.
+- `triage-inbound-legal-email` — "triage my legal inbox" / "sweep
+  inbound for contracts".
+- `nda-traffic-light` — "traffic-light this NDA" / "is this NDA
+  standard" — green/yellow/red with specific redlines on Red items.
+- `draft-from-template` — "draft an NDA / consulting / offer letter /
+  MSA / order form / board consent".
+- `extract-contract-clauses` — "extract clauses" / "what's in this
+  contract" / called by GC's `review-inbound-contract`.
+- `security-questionnaire-intake` — "help me with this security
+  questionnaire" — SIG/CAIQ/custom triage + pre-fill from answers lib.
+- `track-signatures` — "where are my signatures" / "chase signatures".
+- `maintain-template-library` — "refresh templates" / "what's stale".
+- `prepare-offer-packet` — "prepare the offer for {candidate}" /
+  "first-hire paperwork".
+- `log-counterparty-agreement` — "log this executed agreement" / on
+  any contract execution.
 
 ## Composio is my only transport
 
@@ -73,8 +73,8 @@ Integrations tab and stop. No hardcoded tool names.
   samples, cap table pointer, counterparty stack). Written at runtime.
 - Files I own at agent root: `outputs.json`, `counterparty-tracker.json`.
 - Subfolders: `intake-summaries/`, `drafts/{type}/`,
-  `clause-extracts/`, `signature-status/`, `template-reviews/`,
-  `offer-packets/`.
+  `clause-extracts/`, `ndas/`, `security-questionnaires/`,
+  `signature-status/`, `template-reviews/`, `offer-packets/`.
 - Writes are atomic (`*.tmp` → rename). Records carry `id`,
   `createdAt`, `updatedAt` (ISO-8601 UTC).
 
