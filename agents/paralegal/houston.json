@@ -1,0 +1,127 @@
+{
+  "id": "paralegal",
+  "name": "Paralegal",
+  "description": "Your paralegal. Triages the legal inbox, drafts routine paper from your templates (NDAs, consulting agreements, offer letters, MSAs, order forms, board consents), extracts clauses from inbound contracts, tracks signatures, keeps the template library current, assembles first-hire offer packets, and logs every executed agreement to the counterparty tracker. Drafts only — never sends, never signs, never files.",
+  "icon": "FileSignature",
+  "category": "business",
+  "author": "Houston Legal",
+  "tags": [
+    "legal",
+    "solo-founder",
+    "paperwork",
+    "templates",
+    "intake"
+  ],
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "customComponent": "Dashboard"
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "builtIn": "board",
+      "badge": "activity"
+    },
+    {
+      "id": "job-description",
+      "label": "Job Description",
+      "builtIn": "job-description"
+    },
+    {
+      "id": "files",
+      "label": "Files",
+      "builtIn": "files"
+    },
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "builtIn": "integrations"
+    }
+  ],
+  "defaultTab": "overview",
+  "agentSeeds": {
+    "outputs.json": "[]",
+    ".houston/activity.json": "[{\"id\":\"7c1e4b2a-9d3f-4e8a-b1c5-2a6f8e0d4c13\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message. I'll ask three things: your counterparty stack (inbox + document storage + signing platform), where your existing template library lives, and your voice on professional emails. Best modality per topic: connected app via Composio (Integrations tab) > file/URL > paste.\",\"status\":\"needs_you\"}]"
+  },
+  "useCases": [
+    {
+      "category": "Intake",
+      "title": "Triage my legal inbox — what needs me?",
+      "blurb": "NDA traffic-lights, routing, and what to ignore.",
+      "prompt": "Triage my legal inbox — show me what needs me today.",
+      "fullPrompt": "Sweep my connected inbox for legal-flavored inbound over the last 7 days. Use the triage-inbound-legal-email skill. Classify each one: NDA (green/yellow/red), MSA or order form, DPA, DSR, subpoena or legal process, TM office action, contractor paper, or other. For each, give me a one-line summary and the recommended route: self-handle via draft-from-template, send to General Counsel's review-inbound-contract, flag attorneyReviewRequired, or ignore. Save to intake-summaries/{YYYY-MM-DD}.md and log in outputs.json.",
+      "description": "Sweeps the connected inbox via Composio, classifies legal inbound using the NDA traffic-light rubric, and routes each item to self-handle, review, counsel, or ignore.",
+      "outcome": "Triage at intake-summaries/{YYYY-MM-DD}.md with routing per item.",
+      "skill": "triage-inbound-legal-email",
+      "tool": "Inbox"
+    },
+    {
+      "category": "Drafts",
+      "title": "Draft {NDA / consulting / offer / MSA / order form} from my templates",
+      "blurb": "Your template, your variables, a clean first draft.",
+      "prompt": "Draft a {document type} from my templates for {counterparty}.",
+      "fullPrompt": "Draft a {document type — NDA mutual or one-way, consulting agreement, offer letter, MSA, order form, or board written consent} from my template library for {counterparty}. Use the draft-from-template skill. Read config/template-library.json for which template to pull, read ../general-counsel/legal-context.md for entity + risk posture, then ask me the variables you need (effective date, term, key commercials, scope). Save to drafts/{type}/{counterparty}-{YYYY-MM-DD}.md and log in outputs.json as status: draft. Drafts only — I review before anything leaves.",
+      "description": "Multi-shape drafting from the founder's template library: mutual NDA, one-way NDA, consulting / contractor agreement (work-for-hire + IP + confidentiality), at-will offer letter, SaaS MSA, order form, board written consent.",
+      "outcome": "Clean draft at drafts/{type}/{counterparty}-{YYYY-MM-DD}.md.",
+      "skill": "draft-from-template",
+      "tool": "Templates"
+    },
+    {
+      "category": "Intake",
+      "title": "Extract the clauses from this contract",
+      "blurb": "Term, cap, indemnity, IP, DPA — structured.",
+      "prompt": "Extract the clauses from this contract: {file or URL}.",
+      "fullPrompt": "Extract the clauses from this contract: {file, URL, or paste}. Use the extract-contract-clauses skill. Pull parties, term, termination, auto-renewal, notice period, liability cap, indemnity (who indemnifies whom, for what), IP ownership + license, governing law + venue, DPA presence + SCCs, AI-training carve-out, data residency, breach SLA, and exit / data-retrieval rights. Save human-readable to clause-extracts/{counterparty}-{YYYY-MM-DD}.md and update counterparty-tracker.json. This is what General Counsel's review-inbound-contract reads to start a review.",
+      "description": "Structured clause extraction from a supplied contract (file, URL, or paste). Output feeds General Counsel's review-inbound-contract as a dependency.",
+      "outcome": "Clause map at clause-extracts/{counterparty}-{YYYY-MM-DD}.md + tracker update.",
+      "skill": "extract-contract-clauses",
+      "tool": "Document Storage"
+    },
+    {
+      "category": "Tracking",
+      "title": "Where are my outstanding signatures?",
+      "blurb": "Who hasn't signed, who's overdue, what's executed.",
+      "prompt": "Where are my outstanding signatures?",
+      "fullPrompt": "Check the connected signing platform for outstanding documents. Use the track-signatures skill. Discover the signing-platform tool slug via composio search signing-platform. List outstanding, signed, and overdue. For laggards, draft a polite reminder — do not send. File executed copies to the connected document storage (composio search document-storage). Save to signature-status/{YYYY-MM-DD}.md and log in outputs.json.",
+      "description": "Watches the connected signing platform for outstanding documents, drafts reminders for laggards (never sends), and files executed copies to the founder's document storage.",
+      "outcome": "Status board at signature-status/{YYYY-MM-DD}.md.",
+      "skill": "track-signatures",
+      "tool": "Signing Platform"
+    },
+    {
+      "category": "Templates",
+      "title": "Refresh my template library — what's stale?",
+      "blurb": "Version control on your standard paper.",
+      "prompt": "Refresh my template library — what's stale?",
+      "fullPrompt": "Run a template library review. Use the maintain-template-library skill. Read config/template-library.json, flag anything > 12 months old, check each template against current law references (AI-training disclosure, SCC versions, 2026 DPA standards, CA/EU rights). Produce a refresh plan — which templates to retire, which to edit, which are still fine. I approve each refresh; do not auto-rewrite templates. Save to template-reviews/{YYYY-MM-DD}.md and log in outputs.json.",
+      "description": "Version control on the founder's standard paper. Flags stale templates, checks against current law, produces a refresh plan — founder approves each change.",
+      "outcome": "Refresh plan at template-reviews/{YYYY-MM-DD}.md.",
+      "skill": "maintain-template-library",
+      "tool": "Templates"
+    },
+    {
+      "category": "Hiring",
+      "title": "Prepare the offer packet for {candidate}",
+      "blurb": "Offer letter + CIIAA + option grant + exercise.",
+      "prompt": "Prepare the offer packet for {candidate} — role {role}, comp {amount}, {N} options.",
+      "fullPrompt": "Assemble a first-hire offer packet for {candidate}. Use the prepare-offer-packet skill. I'll give you the role, base comp, option grant count, and vesting. Pull strike price from config/cap-table.json (current 409A) — if stale or missing, flag attorneyReviewRequired and ask me. Produce four markdown files: offer letter (at-will + confidentiality + CIIAA reference), CIIAA, option grant notice, exercise agreement. Save to offer-packets/{candidate-slug}-{YYYY-MM-DD}/ with an index.md. Log in outputs.json as status: draft.",
+      "description": "First-hire packet: offer letter + CIIAA + option grant notice + exercise agreement, anchored to the current 409A. Flags attorneyReviewRequired if comp is non-standard.",
+      "outcome": "Packet at offer-packets/{candidate-slug}-{YYYY-MM-DD}/ with 4 files + index.",
+      "skill": "prepare-offer-packet",
+      "tool": "Cap Table"
+    },
+    {
+      "category": "Tracking",
+      "title": "Log this executed agreement with {counterparty}",
+      "blurb": "Parties, dates, term, auto-renewal, renewal clock.",
+      "prompt": "Log the executed agreement with {counterparty}.",
+      "fullPrompt": "Log an executed agreement to the counterparty tracker. Use the log-counterparty-agreement skill. I'll give you the signed copy (file, URL, or paste) or point you at it in document storage. Extract parties, agreementType, executedDate, effectiveDate, term, autoRenewal, noticePeriod, governingLaw, keyObligations, renewalDate, and signedCopyPath. Append to counterparty-tracker.json at agent root. Compliance Ops's watch-legal-deadlines reads this for the renewal clock; General Counsel's weekly-legal-review reads it for the Monday readout.",
+      "description": "On execution, appends a structured row to counterparty-tracker.json — parties, dates, term, auto-renewal, governing law, key obligations. Feeds the renewal clock downstream.",
+      "outcome": "New row in counterparty-tracker.json + outputs.json entry.",
+      "skill": "log-counterparty-agreement",
+      "tool": "Document Storage"
+    }
+  ]
+}

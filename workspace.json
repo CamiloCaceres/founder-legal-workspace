@@ -1,0 +1,5 @@
+{
+  "name": "Founder Legal Workspace",
+  "description": "Three AI legal hires for solo founders at week 0 — a General Counsel (fractional GC, reviews contracts, owns the shared legal context doc), a Paralegal (paperwork, templates, intake, drafts), and a Compliance Ops agent (privacy policy, Delaware franchise tax, 83(b), 409A, DSR clock, trademark knockout). Chat-first, markdown-output, shared legal context doc. Drafts only — never sends, files, or signs anything without founder approval.",
+  "agents": ["general-counsel", "paralegal", "compliance-ops"]
+}

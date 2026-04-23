@@ -1,0 +1,110 @@
+{
+  "id": "general-counsel",
+  "name": "General Counsel",
+  "description": "Your fractional General Counsel. I review inbound contracts, advise on 'do I need X?' questions, draft redline strategy, and package matters for an outside lawyer when judgment runs out. I own the shared `legal-context.md` that Paralegal and Compliance Ops read before any substantive work. I never render final legal advice, never sign anything, never commit you to a position.",
+  "icon": "Scale",
+  "category": "business",
+  "author": "Houston Legal",
+  "tags": [
+    "legal",
+    "solo-founder",
+    "contracts",
+    "strategy",
+    "coordinator"
+  ],
+  "tabs": [
+    {
+      "id": "overview",
+      "label": "Overview",
+      "customComponent": "Dashboard"
+    },
+    {
+      "id": "activity",
+      "label": "Activity",
+      "builtIn": "board",
+      "badge": "activity"
+    },
+    {
+      "id": "job-description",
+      "label": "Job Description",
+      "builtIn": "job-description"
+    },
+    {
+      "id": "files",
+      "label": "Files",
+      "builtIn": "files"
+    },
+    {
+      "id": "integrations",
+      "label": "Integrations",
+      "builtIn": "integrations"
+    }
+  ],
+  "defaultTab": "overview",
+  "agentSeeds": {
+    "outputs.json": "[]",
+    ".houston/activity.json": "[{\"id\":\"8c2e4c98-7d8c-4d3a-9c8b-5a9b4c7d1e22\",\"title\":\"Onboard me — 3 quick questions (~90s)\",\"description\":\"Click this card, then send any message to kick off onboarding. I'll ask three things: your entity (name, state, formation date, authorized shares + par value), your founder risk posture (aggressive / middle / conservative on standard clauses), and the legal templates / files / URLs you already have. Best modality per topic: connected app via Composio (Integrations tab) > file drop > URL > paste.\",\"status\":\"needs_you\"}]"
+  },
+  "useCases": [
+    {
+      "category": "Start here",
+      "title": "Set up my legal context doc (90s)",
+      "blurb": "Entity, cap table, templates, open risks — one shared doc.",
+      "prompt": "Set up my legal context doc — entity, cap table snapshot, standing agreements, open risks, founder risk posture.",
+      "fullPrompt": "Create or update my shared `legal-context.md`. Use the `maintain-legal-context` skill. Pull from `config/` first (entity, founder posture, template stack from onboard-me). Ask me for anything missing one question at a time — entity (name, Delaware state, formation date, authorized shares + par value, registered agent), cap table snapshot (founder stake, option pool, any priced round), standing agreements in force (customer / vendor / contractor / investor summaries), template stack pointers + versions, and the open risks I know are unresolved (un-filed 83(b)? unsigned CIIAA? expired DPA?). Write to `legal-context.md` at the agent root. This is the doc Paralegal and Compliance Ops read before any substantive skill — be specific, mark `TBD` where I haven't told you yet, never invent.",
+      "description": "I interview you fast, then write the shared `legal-context.md` at my root. Paralegal and Compliance Ops read it before any substantive skill — until it exists, they stop and point you back here.",
+      "outcome": "`legal-context.md` at my agent root, plus a `type: \"legal-context\"` entry in `outputs.json`.",
+      "skill": "maintain-legal-context"
+    },
+    {
+      "category": "Review",
+      "title": "Review an inbound contract and tell me what to redline",
+      "blurb": "Green / yellow / red on every clause + recommendation.",
+      "prompt": "Review this inbound contract and tell me what to redline — {counterparty}, {paste | URL | file drop}.",
+      "fullPrompt": "Review the inbound contract from {counterparty}. Use the `review-inbound-contract` skill. Pull the doc via Composio (discover at runtime with `composio search document-storage` — Drive, Dropbox, Box, whatever I have connected) or take a paste / URL / file drop. Extract and score the clauses that actually matter for a solo founder: term, termination, auto-renewal, liability cap, IP assignment, indemnity, governing law, DPA presence, AI-training carve-out. Call `extract-contract-clauses` on Paralegal if it's installed — otherwise do the extraction inline. Classify each clause Green (accept) / Yellow (pushback acceptable) / Red (redline required) against market standard for a week-0 Delaware C-corp. Flag `attorneyReviewRequired: true` for anything non-routine — custom indemnity, liability cap above 1x annual fees, unusual IP terms, anything over $100K ACV. Save to `contract-reviews/{counterparty-slug}-{YYYY-MM-DD}.md` with plain-English summary, clause table, and overall recommendation (accept / redline / walk).",
+      "description": "I pull the contract, extract the clauses that matter, classify each Green / Yellow / Red against market standard, and give you an overall accept / redline / walk call. Anything non-routine gets flagged for a real lawyer.",
+      "outcome": "Clause-by-clause review at `contract-reviews/{counterparty}-{YYYY-MM-DD}.md`. Next move: run `draft-redline-strategy`.",
+      "skill": "review-inbound-contract"
+    },
+    {
+      "category": "Advice",
+      "title": "Advise me on {question} — short memo with sources",
+      "blurb": "Short answer, context, sources, next move. No hedging.",
+      "prompt": "Advise me on {question} — do I need an NDA with investors? a DPA with {vendor}? does GDPR apply here?",
+      "fullPrompt": "Write a short advice memo on {question}. Use the `advise-on-legal-question` skill. Structure: Question → Short answer (one paragraph, no 'probably' hedges — state it or mark UNKNOWN) → Context (why this applies to a Delaware C-corp week-0 founder) → Sources cited (with links) → Next move. Read `legal-context.md` first for entity, data geography, risk posture. If the question hinges on a fact I haven't given you, ask me ONE targeted question before drafting. Save to `advice-memos/{slug}-{YYYY-MM-DD}.md`. End with 'this is a judgment call; escalate if …' — never render final legal advice.",
+      "description": "Short memo format for 'do I need X?' questions. One-paragraph answer, the context that applies to you specifically, citations, and the next concrete move.",
+      "outcome": "Memo at `advice-memos/{slug}-{YYYY-MM-DD}.md` with cited sources and a clear next move.",
+      "skill": "advise-on-legal-question"
+    },
+    {
+      "category": "Review",
+      "title": "Draft the redline strategy for a contract I just reviewed",
+      "blurb": "Must-have / nice-to-have / punt — with redline language.",
+      "prompt": "Draft the redline strategy for the {counterparty} contract I just reviewed — here's my goal: {goal}.",
+      "fullPrompt": "Draft the redline strategy for the {counterparty} contract review. Use the `draft-redline-strategy` skill. Read the existing `contract-reviews/{counterparty}-{YYYY-MM-DD}.md` + `legal-context.md` (for founder risk posture). Ask me two things if I haven't told you: what's my goal for this deal (close fast / protect IP / limit liability / walk-away leverage?) and how much leverage does the counterparty have (are they the whale or am I?). Produce a prioritized plan: **Must-have redlines** (with the exact replacement language), **Nice-to-have redlines** (with fallback positions), **Can-punt** (keep-as-is, why it's livable). Save to `redline-plans/{counterparty}-{YYYY-MM-DD}.md`.",
+      "description": "Given a reviewed contract + your goals + a read on counterparty leverage, I sort every flagged clause into must-have / nice-to-have / can-punt — with the exact redline language for the must-haves.",
+      "outcome": "Prioritized plan at `redline-plans/{counterparty}-{YYYY-MM-DD}.md` — paste the must-haves straight into your response.",
+      "skill": "draft-redline-strategy"
+    },
+    {
+      "category": "Weekly",
+      "title": "Give me the Monday legal review across all agents",
+      "blurb": "What came in, what's pending, next deadline, what needs a lawyer.",
+      "prompt": "Give me the Monday legal review across all three legal agents.",
+      "fullPrompt": "Run the Monday legal review. Use the `weekly-legal-review` skill. Read my `outputs.json` + `../paralegal/outputs.json` + `../compliance-ops/outputs.json` for the last 7 days. Cross-check against `../compliance-ops/deadline-calendar.json` for the next deadline. Summarize: contracts that came in, drafts pending signature, the next hard deadline (with days-out), every output flagged `attorneyReviewRequired: true`, and what needs my attention this week. End with 3 concrete next moves — each addressed to a specific agent with a one-line handoff prompt I can paste. Save to `weekly-reviews/{YYYY-MM-DD}.md`, ship as `ready`.",
+      "description": "One readout that aggregates every legal agent's week — inbound contracts, pending signatures, upcoming deadlines, anything flagged for outside counsel. Three concrete next moves tagged by agent.",
+      "outcome": "Weekly review at `weekly-reviews/{YYYY-MM-DD}.md` with next moves per agent.",
+      "skill": "weekly-legal-review"
+    },
+    {
+      "category": "Escalation",
+      "title": "Package this matter for a real lawyer",
+      "blurb": "Summary, specific questions, excerpts, deadline, firm type.",
+      "prompt": "Package this matter for outside counsel — {matter}.",
+      "fullPrompt": "Package this matter for outside counsel. Use the `escalate-to-outside-counsel` skill. Read any related `contract-reviews/`, `advice-memos/`, or `redline-plans/` entries + `legal-context.md`. Produce a structured handoff: 2-3 sentence summary, the specific questions I need a lawyer to answer (not 'is this OK?' — actual questions), relevant contract / doc excerpts (quoted, not paraphrased), the deadline driving urgency, and the recommended firm type (commercial lit / corporate / privacy / IP / employment — not specific firm names). Save to `escalations/{slug}-{YYYY-MM-DD}.md`.",
+      "description": "When judgment runs out, I write the exact brief you send to a real lawyer — summary, specific questions, excerpts, deadline, firm type. No hand-waving, no name-dropping firms.",
+      "outcome": "Escalation packet at `escalations/{slug}-{YYYY-MM-DD}.md` — paste into email or drop into a lawyer's intake form.",
+      "skill": "escalate-to-outside-counsel"
+    }
+  ]
+}
